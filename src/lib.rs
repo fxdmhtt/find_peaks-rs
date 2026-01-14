@@ -1,5 +1,11 @@
+#![cfg_attr(not(test), no_std)]
+extern crate alloc;
+
+use alloc::{
+    borrow::{Cow, ToOwned},
+    vec::Vec,
+};
 use core::ops::Range;
-use std::borrow::Cow;
 
 /// Struct containing the information of a found peak.
 ///
@@ -87,7 +93,7 @@ where
 
 impl<'a, T> PeakFinder<'a, T, usize>
 where
-    T: Clone + std::ops::Sub<Output = T> + PartialOrd,
+    T: Clone + core::ops::Sub<Output = T> + PartialOrd,
 {
     /// Initialize with a data slice.
     pub fn new(y_data: &'a [T]) -> Self {
@@ -124,8 +130,8 @@ where
 
 impl<'a, T, S> PeakFinder<'a, T, S>
 where
-    T: Clone + std::ops::Sub<Output = T> + PartialOrd,
-    S: Clone + std::ops::Sub<Output = S> + PartialOrd,
+    T: Clone + core::ops::Sub<Output = T> + PartialOrd,
+    S: Clone + core::ops::Sub<Output = S> + PartialOrd,
     [S]: ToOwned,
 {
     pub fn new_with_x(y_data: &'a [T], x_data: &'a [S]) -> Self {
@@ -282,7 +288,7 @@ where
             peaks.sort_unstable_by(|a, b| {
                 b.height
                     .partial_cmp(&a.height)
-                    .unwrap_or(std::cmp::Ordering::Equal)
+                    .unwrap_or(core::cmp::Ordering::Equal)
             });
         }
 
@@ -335,10 +341,10 @@ where
 
         let left_valley_y = from_peak_left
             .take_while(|&x| x <= &data[i_left])
-            .min_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+            .min_by(|a, b| a.partial_cmp(b).unwrap_or(core::cmp::Ordering::Equal));
         let right_valley_y = from_peak_right
             .take_while(|&x| x <= &data[i_left])
-            .min_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+            .min_by(|a, b| a.partial_cmp(b).unwrap_or(core::cmp::Ordering::Equal));
 
         let peak_height = data[i_left].clone();
         match (left_valley_y, right_valley_y) {
